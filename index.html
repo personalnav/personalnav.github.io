@@ -14,21 +14,43 @@
 	padding: 5px;
 	#height: 850px;
 	width: 1000px;
-	border: 1px solid black;
+	#border: 1px solid black;
 }
 
 .child-container {
 	width: auto;
 	padding: 3px 0px;
-	margin: 3px 0px;
+	margin: 8px 0px;
 	border: 1px dotted black;
+	border-radius: 3px;
+	box-shadow: #ccc 0px 0px 10px;
+	background: #F1E1FF
+}
+
+.child-container-title {
+	width: auto;
+	padding: 3px 0px;
+	margin: 5px 0px 15px 0px;
+	border: 1px dotted black;
+	border-radius: 3px;
+	box-shadow: #ccc 0px 0px 10px;
+	background: #F1E1FF
+}
+
+.title {
+	padding: 2px 0px;
+	margin: 2px 5px;
+	font-weight: 700;
+	font-size: 35px;
+	color: #5151A2;
 }
 
 .info-title {
 	padding: 2px 0px;
 	margin: 2px 5px;
 	font-weight: 700;
-	font-size: 30px;
+	font-size: 20px;
+	color: #5151A2;
 }
 
 .info-detail {
@@ -44,23 +66,44 @@ img{
 .info-table a{
 	padding:0px 15px;
 }
+
+a:link{
+    #color:red;
+    text-decoration: none; 
+}
+a:visited{
+    #color:green;
+    text-decoration: none; 
+}
+a:hover{
+    #color:yellow;
+    text-decoration: underline; 
+}
+a:actived{
+    #color:red;
+    text-decoration: none; 
+}
+.inner {
+	height:1px;
+	border:none;
+	border-top:1px dotted #185598;
+}
 </style>
 </head>
 
 <body>
 	<div class="container">
-		<div class="child-container">
-			<div class="info-title">
+		<div class="child-container-title">
+			<div class="title">
 				<center>网站导航</center>
 			</div>
 		</div>
 		
-
 		<div class="child-container">
 			<div class="info-title">
 				常用
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -73,12 +116,11 @@ img{
 			</div>
 		</div>
 		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				学习
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -90,14 +132,12 @@ img{
 				</table>
 			</div>
 		</div>
-		
 
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				经济
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -111,15 +151,11 @@ img{
 			</div>
 		</div>
 
-
-		
-		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				休闲
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -130,16 +166,11 @@ img{
 			</div>
 		</div>
 		
-		
-
-		
-		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				国家题材纪录片
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -157,13 +188,11 @@ img{
 			</div>
 		</div>
 		
-		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				综合纪录片
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -254,12 +283,11 @@ img{
 			</div>
 		</div>		
 		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				院校
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -329,12 +357,11 @@ img{
 			</div>
 		</div>		
 		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				政府
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
@@ -491,13 +518,11 @@ img{
 			</div>
 		</div>
 		
-		
-		<hr style="margin:20px 0px">
 		<div class="child-container">
 			<div class="info-title">
 				世界
 			</div>
-			<hr>
+			<hr class="inner">
 			<div class="info-detail">
 				<table class="info-table">
 					<tr>
