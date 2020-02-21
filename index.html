@@ -21,20 +21,20 @@
 	width: auto;
 	padding: 3px 0px;
 	margin: 8px 0px;
-	border: 1px dotted black;
+	border: 0px solid black;
 	border-radius: 3px;
-	box-shadow: #ccc 0px 0px 10px;
-	background: #F1E1FF
+	box-shadow: 0px 0px 10px #aaa ;
+	background: aliceblue;
 }
 
 .child-container-title {
 	width: auto;
 	padding: 3px 0px;
 	margin: 5px 0px 15px 0px;
-	border: 1px dotted black;
+	border: 0px solid black;
 	border-radius: 3px;
-	box-shadow: #ccc 0px 0px 10px;
-	background: #F1E1FF
+	box-shadow: 0px 0px 10px #aaa ;
+	background: aliceblue;
 }
 
 .title {
@@ -42,7 +42,7 @@
 	margin: 2px 5px;
 	font-weight: 700;
 	font-size: 35px;
-	color: #5151A2;
+	color: #2a5caa;
 }
 
 .info-title {
@@ -50,7 +50,7 @@
 	margin: 2px 5px;
 	font-weight: 700;
 	font-size: 20px;
-	color: #5151A2;
+	color: #2a5caa;
 }
 
 .info-detail {
@@ -63,12 +63,20 @@ img{
 	width:100%;
 }
 
+table {
+	#width: 100%;
+}
+
+table td {
+	padding: 3px 0px;
+}
+
 .info-table a{
 	padding:0px 15px;
 }
 
 a:link{
-    color: #AD5A5A;
+    color: #2a5caa;
     text-decoration: none; 
 }
 a:visited{
@@ -83,11 +91,22 @@ a:actived{
     #color:red;
     text-decoration: none; 
 }
+
 .inner {
-	height:1px;
 	border:none;
-	border-top:1px dotted #185598;
+	border-bottom:1px solid #DaDaDa;
+	height:1px;
+	-webkit-transform: scaleY(0.5);
+	-webkit-transform-origin:0 0;
 }
+
+.td-title {
+	border-right: 1px dotted;
+	text-align: center;
+	font-weight: 600;
+	width: 9%;
+}
+
 </style>
 </head>
 
@@ -289,41 +308,49 @@ a:actived{
 			</div>
 			<hr class="inner">
 			<div class="info-detail">
-				<table class="info-table">
+				<table class="info-table" style="width: 100%">
 					<tr>
+						<td class="td-title">境内</td>
 						<td ><a target="_blank" href="https://www.tsinghua.edu.cn">清华大学</a></td>
 						<td ><a target="_blank" href="https://www.pku.edu.cn">北京大学</a></td>
 						<td ><a target="_blank" href="http://www.zju.edu.cn">浙江大学</a></td>
 						<td ><a target="_blank" href="https://www.fudan.edu.cn">复旦大学</a></td>
 						<td ><a target="_blank" href="https://www.ucas.ac.cn">中国科学院大学</a></td>
-						<td ><a target="_blank" href="https://www.ruc.edu.cn">中国人民大学</a></td>
 					</tr>
 					<tr>
+						<td class="td-title">境内</td>
+						<td ><a target="_blank" href="https://www.ruc.edu.cn">中国人民大学</a></td>
 						<td ><a target="_blank" href="https://www.sjtu.edu.cn">上海交通大学</a></td>
 						<td ><a target="_blank" href="https://www.nju.edu.cn">南京大学</a></td>
 						<td ><a target="_blank" href="https://www.whu.edu.cn">武汉大学</a></td>
 						<td ><a target="_blank" href="http://www.sysu.edu.cn">中山大学</a></td>
-						<td ><a target="_blank" href="https://www.jlu.edu.cn">吉林大学</a></td>
-						<td ><a target="_blank" href="http://www.hust.edu.cn">华中科技大学</a></td>
 					</tr>
 					<tr>
+						<td class="td-title">境内</td>
+						<td ><a target="_blank" href="https://www.jlu.edu.cn">吉林大学</a></td>
+						<td ><a target="_blank" href="http://www.hust.edu.cn">华中科技大学</a></td>
 						<td ><a target="_blank" href="http://www.tju.edu.cn">天津大学</a></td>
 						<td ><a target="_blank" href="http://www.scu.edu.cn">四川大学</a></td>
 						<td ><a target="_blank" href="https://www.ustc.edu.cn">中国科学技术大学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">境内</td>
 						<td ><a target="_blank" href="https://www.nankai.edu.cn/">南开大学</a></td>
 						<td ><a target="_blank" href="https://www.bnu.edu.cn">北京师范大学</a></td>
 						<td ><a target="_blank" href="http://www.xjtu.edu.cn">西安交通大学</a></td>
-					</tr>
-					<tr>
 						<td ><a target="_blank" href="http://www.hit.edu.cn">哈尔滨工业大学</a></td>
 						<td ><a target="_blank" href="https://www.sdu.edu.cn">山东大学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">境内</td>
 						<td ><a target="_blank" href="http://www.csu.edu.cn">中南大学</a></td>
 						<td ><a target="_blank" href="https://www.xmu.edu.cn">厦门大学</a></td>
 						<td ><a target="_blank" href="https://www.tongji.edu.cn">同济大学</a></td>
 						<td ><a target="_blank" href="https://www.seu.edu.cn">东南大学</a></td>
+						<td ><a target="_blank" href="https://www.buaa.edu.cn">北京航空航天大学</a></td>
 					</tr>
 					<tr>
-						<td ><a target="_blank" href="https://www.buaa.edu.cn">北京航空航天大学</a></td>
+						<td class="td-title">境内</td>
 						<td ><a target="_blank" href="http://www.neu.edu.cn">东北大学</a></td>
 						<td ><a target="_blank" href="https://www.nwpu.edu.cn">西北工业大学</a></td>
 						<td ><a target="_blank" href="https://www.ecnu.edu.cn">华东师范大学</a></td>
@@ -331,31 +358,237 @@ a:actived{
 						<td ><a target="_blank" href="https://www.scut.edu.cn">华南理工大学</a></td>
 					</tr>
 					<tr>
+						<td class="td-title">港澳台</td>
 						<td ><a target="_blank" href="https://www.hku.hk">香港大学</a></td>
 						<td ><a target="_blank" href="http://www.cuhk.edu.hk">香港中文大学</a></td>
 						<td ><a target="_blank" href="https://www.ust.hk">香港科技大学</a></td>
 						<td ><a target="_blank" href="https://www.um.edu.mo">澳门大学</a></td>
 						<td ><a target="_blank" href="https://www.ntu.edu.tw">台湾大学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">港澳台</td>
 						<td ><a target="_blank" href="https://www.ntust.edu.tw">台湾科技大学</a></td>
 					</tr>
 					<tr>
+						<td class="td-title">国外</td>
 						<td ><a target="_blank" href="https://www.harvard.edu">哈佛大学</a></td>
 						<td ><a target="_blank" href="https://ee.stanford.edu">斯坦福大学</a></td>
 						<td ><a target="_blank" href="https://www.berkeley.edu">加州大学伯克利分校</a></td>
 						<td ><a target="_blank" href="http://www.useoul.edu">斯坦福大学</a></td>
 						<td ><a target="_blank" href="https://www.yale.edu">耶鲁大学</a></td>
-						<td ><a target="_blank" href="https://www.princeton.edu">普林斯顿大学</a></td>
 					</tr>
-					<tr>	
+					<tr>
+						<td class="td-title">国外</td>
+						<td ><a target="_blank" href="https://www.princeton.edu">普林斯顿大学</a></td>
 						<td ><a target="_blank" href="https://www.cam.ac.uk">剑桥大学</a></td>
 						<td ><a target="_blank" href="http://www.ox.ac.uk">牛津大学</a></td>
 						<td ><a target="_blank" href="http://www.nus.edu.sg">新加坡国立大学</a></td>
 						<td ><a target="_blank" href="https://www.u-tokyo.ac.jp">东京大学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">国外</td>
 						<td ><a target="_blank" href="http://www.useoul.edu">首尔大学</a></td>
 					</tr>
 				</table>
 			</div>
 		</div>		
+		
+		
+		
+		<div class="child-container">
+			<div class="info-title">
+				学科专业
+			</div>
+			<hr class="inner">
+			<div class="info-detail">
+				<table class="info-table">
+					<tr>
+						<td class="td-title">哲学</td>
+						<td ><a >哲学</a></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">经济学</td>
+						<td ><a >理论经济学</a></td>
+						<td ><a >应用经济学</a></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">法学</td>
+						<td ><a >法学</a></td>
+						<td ><a >政治学</a></td>
+						<td ><a >社会学</a></td>
+						<td ><a >民族学</a></td>
+						<td ><a >马克思主义理论</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">教育学</td>
+						<td ><a >教育学</a></td>
+						<td ><a >心理学</a></td>
+						<td ><a >体育学</a></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">文学</td>
+						<td ><a >中国语言文学</a></td>
+						<td ><a >外国语言文学</a></td>
+						<td ><a >新闻传播学</a></td>
+						<td ><a >艺术学</a></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">历史学</td>
+						<td ><a >历史学</a></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">理学</td>
+						<td ><a >数学</a></td>
+						<td ><a >物理学</a></td>
+						<td ><a >化学</a></td>
+						<td ><a >天文学</a></td>
+						<td ><a >地理学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">理学</td>
+						<td ><a >大气科学</a></td>
+						<td ><a >海洋科学</a></td>
+						<td ><a >地球物理学</a></td>
+						<td ><a >地质学</a></td>
+						<td ><a >生物学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">理学</td>
+						<td ><a >系统科学</a></td>
+						<td ><a >科学技术史</a></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >力学</a></td>
+						<td ><a >机械工程</a></td>
+						<td ><a >光学工程</a></td>
+						<td ><a >仪器科学与技术</a></td>
+						<td ><a >材料科学与工程</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >冶金工程</a></td>
+						<td ><a >动力工程及工程热物理</a></td>
+						<td ><a >电气工程</a></td>
+						<td ><a >电子科学与技术</a></td>
+						<td ><a >信息与通信工程</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >控制科学与工程</a></td>
+						<td ><a >计算机科学与技术</a></td>
+						<td ><a >建筑学</a></td>
+						<td ><a >土木工程</a></td>
+						<td ><a >水利工程</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >测绘科学与技术</a></td>
+						<td ><a >化学工程与技术</a></td>
+						<td ><a >地质资源与地质工程</a></td>
+						<td ><a >矿业工程</a></td>
+						<td ><a >石油与天然气工程</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >纺织科学与工程</a></td>
+						<td ><a >轻工技术与工程</a></td>
+						<td ><a >交通运输工程</a></td>
+						<td ><a >船舶与海洋工程</a></td>
+						<td ><a >航空宇航科学与技术</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >兵器科学与技术</a></td>
+						<td ><a >核科学与技术</a></td>
+						<td ><a >农业工程</a></td>
+						<td ><a >林业工程</a></td>
+						<td ><a >环境科学与工程</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">工学</td>
+						<td ><a >生物医学工程</a></td>
+						<td ><a >食品科学与工程</a></td>
+						<td ></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">农学</td>
+						<td ><a >作物学</a></td>
+						<td ><a >园艺学</a></td>
+						<td ><a >农业资源利用</a></td>
+						<td ><a >植物保护</a></td>
+						<td ><a >畜牧学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">农学</td>
+						<td ><a >兽医学</a></td>
+						<td ><a >林学</a></td>
+						<td ><a >水产</a></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">医学</td>
+						<td ><a >基础医学</a></td>
+						<td ><a >临床医学</a></td>
+						<td ><a >口腔医学</a></td>
+						<td ><a >公共卫生与预防医学</a></td>
+						<td ><a >中医学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">医学</td>
+						<td ><a >中西医结合</a></td>
+						<td ><a >药学</a></td>
+						<td ><a >中药学</a></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">军事学</td>
+						<td ><a >军事思想及军事历史</a></td>
+						<td ><a >战略学</a></td>
+						<td ><a >战役学</a></td>
+						<td ><a >战术学</a></td>
+						<td ><a >军队指挥学</a></td>
+					</tr>
+					<tr>
+						<td class="td-title">军事学</td>
+						<td ><a >军制学</a></td>
+						<td ><a >军队政治工作学</a></td>
+						<td ><a title="军事后勤学与军事装备学">军事后勤学与军..</a></td>
+						<td ></td>
+						<td ></td>
+					</tr>
+					<tr>
+						<td class="td-title">管理学</td>
+						<td ><a >管理科学与工程</a></td>
+						<td ><a >工商管理</a></td>
+						<td ><a >农林经济管理</a></td>
+						<td ><a >公共管理</a></td>
+						<td ><a title="图书馆、情报与档案管理">图书馆、情报与档..</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
 		
 		<div class="child-container">
 			<div class="info-title">
@@ -409,7 +642,7 @@ a:actived{
 					<tr>
 						<td><a target="_blank" href="http://www.mct.gov.cn/">文化和旅游部</a></td>
 			            <td><a target="_blank" href="http://www.nhc.gov.cn/">国家卫生健康委员会</a></td>
-						<td><a href="http://www.mva.gov.cn/" target="_blank">退役军人事务部</a></td>
+						<td><a target="_blank" href="http://www.mva.gov.cn/">退役军人事务部</a></td>
 						<td><a target="_blank" href="http://www.mem.gov.cn">应急管理部</a></td>
 					</tr>
 					<tr>
@@ -421,7 +654,7 @@ a:actived{
 					<tr>
 						<td><a target="_blank" href="http://www.cnsa.gov.cn/">国家航天局</a></td>
 						<td><a target="_blank" href="http://www.caea.gov.cn/">国家原子能机构</a></td>
-						<td><a style="text-decoration:none; cursor:default;">国家海洋局</a></td>
+						<td><a >国家海洋局</a></td>
 						<td><a target="_blank" href="http://nnsa.mee.gov.cn/">国家核安全局</a></td>
 					</tr>
 					<tr>
