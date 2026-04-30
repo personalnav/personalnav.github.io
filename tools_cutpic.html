@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片裁剪工具</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+
+        h1 { color: #333; }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .controls button, .controls input[type="file"] {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .controls button { background-color: #007bff; color: white; }
+        .controls button:hover { background-color: #0056b3; }
+        .controls button.active { background-color: #004085; border: 1px solid #002a5c; }
+        .controls input[type="file"] { background-color: #e2e6ea; color: #333; }
+
+        .cropper-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background-color: #333;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            user-select: none;
+        }
+
+        #imageCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: grab;
+            z-index: 1;
+        }
+
+        #imageCanvas:active { cursor: grabbing; }
+
+        #cropBox {
+            position: absolute;
+            border: 2px dashed #fff;
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            cursor: move;
+            display: none;
+            background-color: transparent;
+            z-index: 2;
+            pointer-events: none; 
+        }
+
+        body.shift-active #cropBox {
+            pointer-events: auto;
+            border-color: #ffeb3b;
+        }
+
+        .resizer {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #007bff;
+            border: 1px solid #fff;
+            border-radius: 50%;
+            pointer-events: auto; 
+        }
+        
+        body.shift-active .resizer { background-color: #ffeb3b; }
+
+        .resizer.top-left { top: -5px; left: -5px; cursor: nw-resize; }
+        .resizer.top-right { top: -5px; right: -5px; cursor: ne-resize; }
+        .resizer.bottom-left { bottom: -5px; left: -5px; cursor: sw-resize; }
+        .resizer.bottom-right { bottom: -5px; right: -5px; cursor: se-resize; }
+
+        #zoomControl { display: flex; align-items: center; gap: 10px; }
+        #zoomSlider { width: 150px; }
+
+        #resultContainer {
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        #resultContainer img { max-width: 100%; max-height: 300px; border: 1px solid #ddd; border-radius: 4px; }
+        
+        #downloadBtn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        #downloadBtn:hover { background-color: #218838; }
+
+    </style>
+</head>
+<body>
+
+    <h1>图片裁剪工具 - 修复缩放Bug版</h1>
+
+    <div class="controls">
+        <input type="file" id="imageInput" accept="image/*">
+        <div id="ratioButtons">
+            <button data-ratio="1.333">4:3</button>
+            <button data-ratio="0.75">3:4</button>
+            <button data-ratio="1" class="active">1:1</button>
+            <button data-ratio="1.777">16:9</button>
+            <button data-ratio="0.562">9:16</button>
+            <button data-ratio="NaN">自由</button>
+        </div>
+        <div id="zoomControl">
+            <span>缩放:</span>
+            <input type="range" id="zoomSlider" min="0.1" max="5" step="0.01" value="1">
+            <span class="hint">(支持鼠标滚轮缩放，且以鼠标为中心)</span>
+        </div>
+        <button id="cropBtn">裁剪图片</button>
+    </div>
+
+    <div class="cropper-container" id="cropperContainer">
+        <canvas id="imageCanvas"></canvas>
+        <div id="cropBox">
+            <div class="resizer top-left"></div>
+            <div class="resizer top-right"></div>
+            <div class="resizer bottom-left"></div>
+            <div class="resizer bottom-right"></div>
+        </div>
+    </div>
+
+    <div id="resultContainer">
+        <h3>裁剪结果</h3>
+        <img id="croppedImage" src="" alt="裁剪后的图片">
+        <br>
+        <a id="downloadBtn" download="cropped-image.png">下载图片</a>
+    </div>
+
+    <script>
+        // --- DOM 元素获取 ---
+        const imageInput = document.getElementById('imageInput');
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        const cropBox = document.getElementById('cropBox');
+        const cropperContainer = document.getElementById('cropperContainer');
+        const ratioButtons = document.getElementById('ratioButtons').querySelectorAll('button');
+        const zoomSlider = document.getElementById('zoomSlider');
+        const cropBtn = document.getElementById('cropBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const croppedImage = document.getElementById('croppedImage');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        // --- 状态变量 ---
+        let originalImage = new Image();
+        let imageScale = 1; 
+        let currentRatio = 1; 
+        
+        // 图像位置状态 (关键：这两个变量在缩放时不再被强制重置)
+        let imageDrawX = 0;
+        let imageDrawY = 0;
+        let imageDrawWidth = 0;
+        let imageDrawHeight = 0;
+
+        // 拖动状态
+        let isDraggingImage = false;
+        let dragStartX = 0;
+        let dragStartY = 0;
+        let imageStartX = 0;
+        let imageStartY = 0;
+
+        // 裁剪框调整大小状态
+        let isResizing = false;
+        let resizerHandle = null;
+        let cropBoxStartX = 0;
+        let cropBoxStartY = 0;
+        let cropBoxStartWidth = 0;
+        let cropBoxStartHeight = 0;
+
+
+        // --- 核心功能函数 ---
+
+        function init() {
+            canvas.width = cropperContainer.clientWidth;
+            canvas.height = cropperContainer.clientHeight;
+            resetAllStates();
+        }
+
+        function resetAllStates() {
+            imageScale = 1;
+            zoomSlider.value = 1;
+            currentRatio = 1;
+            ratioButtons.forEach(btn => btn.classList.remove('active'));
+            ratioButtons[2].classList.add('active');
+            
+            resetCropBox();
+            // 图片上传或重置时，才需要重新计算居中位置
+            centerImage(); 
+        }
+
+        function resetCropBox() {
+            const containerWidth = cropperContainer.clientWidth;
+            const containerHeight = cropperContainer.clientHeight;
+            
+            let boxWidth = containerWidth * 0.6;
+            let boxHeight = boxWidth / currentRatio;
+
+            if (boxHeight > containerHeight * 0.6) {
+                boxHeight = containerHeight * 0.6;
+                boxWidth = boxHeight * currentRatio;
+            }
+
+            cropBox.style.width = `${boxWidth}px`;
+            cropBox.style.height = `${boxHeight}px`;
+            cropBox.style.left = `${(containerWidth - boxWidth) / 2}px`;
+            cropBox.style.top = `${(containerHeight - boxHeight) / 2}px`;
+            cropBox.style.display = 'block';
+        }
+
+        // 辅助函数：用于初始化时居中
+        function centerImage() {
+             const imgRatio = originalImage.width / originalImage.height;
+             const canvasRatio = canvas.width / canvas.height;
+             let tempDrawWidth, tempDrawHeight;
+             if (imgRatio > canvasRatio) {
+                 tempDrawWidth = canvas.width * imageScale;
+                 tempDrawHeight = tempDrawWidth / imgRatio;
+             } else {
+                 tempDrawHeight = canvas.height * imageScale;
+                 tempDrawWidth = tempDrawHeight * imgRatio;
+             }
+             imageDrawWidth = tempDrawWidth;
+             imageDrawHeight = tempDrawHeight;
+             imageDrawX = (canvas.width - imageDrawWidth) / 2;
+             imageDrawY = (canvas.height - imageDrawHeight) / 2;
+             drawImage();
+        }
+
+        // 核心修复：drawImage 逻辑优化
+        function drawImage() {
+            if (!originalImage.src) return;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 直接使用当前的 imageDrawX/Y 和 imageDrawWidth/Height 绘制
+            // 不再重新计算位置，从而保留拖动后的状态
+            ctx.drawImage(originalImage, imageDrawX, imageDrawY, imageDrawWidth, imageDrawHeight);
+        }
+
+        // --- 事件监听器 ---
+
+        // 1. 图片上传
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    originalImage.src = event.target.result;
+                    originalImage.onload = () => {
+                        resetAllStates(); // 这会调用 centerImage
+                        resultContainer.style.display = 'none';
+                    };
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 2. 比例按钮
+        ratioButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                ratioButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const ratio = parseFloat(button.dataset.ratio);
+                currentRatio = isNaN(ratio) ? 'free' : ratio;
+                resetCropBox();
+            });
+        });
+
+        // 3. 滑块缩放
+        zoomSlider.addEventListener('input', (e) => {
+            const oldScale = imageScale;
+            imageScale = parseFloat(e.target.value);
+            
+            // 重新计算尺寸
+            const imgRatio = originalImage.width / originalImage.height;
+            const canvasRatio = canvas.width / canvas.height;
+            let newDrawWidth, newDrawHeight;
+            if (imgRatio > canvasRatio) {
+                newDrawWidth = canvas.width * imageScale;
+                newDrawHeight = newDrawWidth / imgRatio;
+            } else {
+                newDrawHeight = canvas.height * imageScale;
+                newDrawWidth = newDrawHeight * imgRatio;
+            }
+            
+            // 简单的缩放：直接改变尺寸，位置不变
+            // 为了体验更好，滑块缩放我们强制让它基于中心缩放
+            // 计算新的中心位置
+            imageDrawX = imageDrawX + (imageDrawWidth - newDrawWidth) / 2;
+            imageDrawY = imageDrawY + (imageDrawHeight - newDrawHeight) / 2;
+            
+            imageDrawWidth = newDrawWidth;
+            imageDrawHeight = newDrawHeight;
+            
+            drawImage();
+        });
+
+        // 4. 滚轮缩放 (核心修复：以鼠标为中心)
+        cropperContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomSensitivity = 0.001;
+            const delta = -e.deltaY * zoomSensitivity;
+            const newScale = Math.max(0.1, Math.min(5, imageScale + delta));
+            
+            if (newScale === imageScale) return; // 缩放未变化
+
+            // --- 关键算法：计算鼠标在图片上的相对位置 ---
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            // 计算当前图片的宽高
+            const imgRatio = originalImage.width / originalImage.height;
+            const canvasRatio = canvas.width / canvas.height;
+            let currentW, currentH;
+            if (imgRatio > canvasRatio) {
+                currentW = canvas.width * imageScale;
+                currentH = currentW / imgRatio;
+            } else {
+                currentH = canvas.height * imageScale;
+                currentW = currentH * imgRatio;
+            }
+
+            // 计算新图片的宽高
+            let newW, newH;
+            if (imgRatio > canvasRatio) {
+                newW = canvas.width * newScale;
+                newH = newW / imgRatio;
+            } else {
+                newH = canvas.height * newScale;
+                newW = newH * imgRatio;
+            }
+
+            // 计算鼠标在图片内部的相对位置 (0~1)
+            const relativeX = (mouseX - imageDrawX) / currentW;
+            const relativeY = (mouseY - imageDrawY) / currentH;
+
+            // 更新全局尺寸
+            imageDrawWidth = newW;
+            imageDrawHeight = newH;
+            imageScale = newScale;
+            zoomSlider.value = newScale;
+
+            // 计算新的左上角坐标，使得鼠标下的像素位置保持不变
+            imageDrawX = mouseX - imageDrawWidth * relativeX;
+            imageDrawY = mouseY - imageDrawHeight * relativeY;
+
+            drawImage();
+        }, { passive: false });
+
+        // 5. Shift 键监听
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Shift') document.body.classList.add('shift-active');
+        });
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'Shift') document.body.classList.remove('shift-active');
+        });
+
+        // --- 画布事件 (图片拖动) ---
+        canvas.addEventListener('mousedown', (e) => {
+            if (e.shiftKey) return;
+
+            isDraggingImage = true;
+            dragStartX = e.clientX;
+            dragStartY = e.clientY;
+            imageStartX = imageDrawX;
+            imageStartY = imageDrawY;
+            canvas.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDraggingImage) {
+                const dx = e.clientX - dragStartX;
+                const dy = e.clientY - dragStartY;
+                imageDrawX = imageStartX + dx;
+                imageDrawY = imageStartY + dy;
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(originalImage, imageDrawX, imageDrawY, imageDrawWidth, imageDrawHeight);
+            } 
+            else if (isResizing) {
+                const dx = e.clientX - dragStartX;
+                const dy = e.clientY - dragStartY;
+                let newWidth, newHeight;
+
+                if (resizerHandle.classList.contains('top-left')) {
+                    newWidth = cropBoxStartWidth - dx;
+                    if (currentRatio !== 'free') newHeight = newWidth / currentRatio;
+                    else newHeight = cropBoxStartHeight - dy;
+                    cropBox.style.left = `${cropBoxStartX + dx}px`;
+                    cropBox.style.top = `${cropBoxStartY + dy}px`;
+                } else if (resizerHandle.classList.contains('top-right')) {
+                    newWidth = cropBoxStartWidth + dx;
+                    if (currentRatio !== 'free') newHeight = newWidth / currentRatio;
+                    else newHeight = cropBoxStartHeight - dy;
+                    cropBox.style.top = `${cropBoxStartY + dy}px`;
+                } else if (resizerHandle.classList.contains('bottom-left')) {
+                    newHeight = cropBoxStartHeight + dy;
+                    if (currentRatio !== 'free') newWidth = newHeight * currentRatio;
+                    else newWidth = cropBoxStartWidth - dx;
+                    cropBox.style.left = `${cropBoxStartX + dx}px`;
+                } else if (resizerHandle.classList.contains('bottom-right')) {
+                    newWidth = cropBoxStartWidth + dx;
+                    if (currentRatio !== 'free') newHeight = newWidth / currentRatio;
+                    else newHeight = cropBoxStartHeight + dy;
+                }
+
+                if (newWidth > 20 && newHeight > 20) {
+                    cropBox.style.width = `${newWidth}px`;
+                    cropBox.style.height = `${newHeight}px`;
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDraggingImage = false;
+            isResizing = false;
+            resizerHandle = null;
+            canvas.style.cursor = 'grab';
+        });
+
+        // --- 裁剪框事件 ---
+        cropBox.addEventListener('mousedown', (e) => {
+            if (e.target.classList.contains('resizer')) {
+                isResizing = true;
+                resizerHandle = e.target;
+                dragStartX = e.clientX;
+                dragStartY = e.clientY;
+                cropBoxStartX = cropBox.offsetLeft;
+                cropBoxStartY = cropBox.offsetTop;
+                cropBoxStartWidth = cropBox.offsetWidth;
+                cropBoxStartHeight = cropBox.offsetHeight;
+            }
+        });
+
+        // 6. 执行裁剪
+        cropBtn.addEventListener('click', () => {
+            if (!originalImage.src) {
+                alert('请先上传图片！');
+                return;
+            }
+
+            const boxLeft = cropBox.offsetLeft;
+            const boxTop = cropBox.offsetTop;
+            const boxWidth = cropBox.offsetWidth;
+            const boxHeight = cropBox.offsetHeight;
+
+            const sourceX = (boxLeft - imageDrawX) * (originalImage.width / imageDrawWidth);
+            const sourceY = (boxTop - imageDrawY) * (originalImage.height / imageDrawHeight);
+            const sourceWidth = boxWidth * (originalImage.width / imageDrawWidth);
+            const sourceHeight = boxHeight * (originalImage.height / imageDrawHeight);
+
+            const resultCanvas = document.createElement('canvas');
+            resultCanvas.width = boxWidth;
+            resultCanvas.height = boxHeight;
+            const resultCtx = resultCanvas.getContext('2d');
+
+            resultCtx.drawImage(
+                originalImage,
+                sourceX, sourceY, sourceWidth, sourceHeight,
+                0, 0, boxWidth, boxHeight
+            );
+
+            const croppedDataUrl = resultCanvas.toDataURL('image/png');
+            croppedImage.src = croppedDataUrl;
+            downloadBtn.href = croppedDataUrl;
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        window.addEventListener('load', init);
+        window.addEventListener('resize', () => {
+            canvas.width = cropperContainer.clientWidth;
+            canvas.height = cropperContainer.clientHeight;
+            // 窗口大小改变时，重新居中图片（可选，看需求，这里选择重置）
+            centerImage();
+            resetCropBox();
+        });
+
+    </script>
+</body>
+</html>
