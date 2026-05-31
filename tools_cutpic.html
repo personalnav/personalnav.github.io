@@ -145,24 +145,24 @@
         </div>
         <button id="cropBtn">裁剪图片</button>
     </div>
-
-    <div class="cropper-container" id="cropperContainer">
-        <canvas id="imageCanvas"></canvas>
-        <div id="cropBox">
-            <div class="resizer top-left"></div>
-            <div class="resizer top-right"></div>
-            <div class="resizer bottom-left"></div>
-            <div class="resizer bottom-right"></div>
+    <div style="display: flex;width: 70%;justify-content: space-between;">
+        <div class="cropper-container" id="cropperContainer">
+            <canvas id="imageCanvas"></canvas>
+            <div id="cropBox">
+                <div class="resizer top-left"></div>
+                <div class="resizer top-right"></div>
+                <div class="resizer bottom-left"></div>
+                <div class="resizer bottom-right"></div>
+            </div>
+        </div>
+    
+        <div id="resultContainer">
+            <h3>裁剪结果</h3>
+            <img id="croppedImage" src="" alt="裁剪后的图片">
+            <br>
+            <a id="downloadBtn" download="cropped-image.png">下载图片</a>
         </div>
     </div>
-
-    <div id="resultContainer">
-        <h3>裁剪结果</h3>
-        <img id="croppedImage" src="" alt="裁剪后的图片">
-        <br>
-        <a id="downloadBtn" download="cropped-image.png">下载图片</a>
-    </div>
-
     <script>
         // --- DOM 元素获取 ---
         const imageInput = document.getElementById('imageInput');
